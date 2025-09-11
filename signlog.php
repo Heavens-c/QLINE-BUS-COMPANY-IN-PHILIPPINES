@@ -13,11 +13,25 @@ $val_email = $_POST['email'] ?? '';
 
 function e($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
 
+/* ---- Toast message coming from login.php or querystring ---- */
+$toast_text = '';
+$toast_type = 'error'; // error | success | info
+if (!empty($_SESSION['login_error'])) {
+    $toast_text = (string)$_SESSION['login_error'];
+    $toast_type = 'error';
+    unset($_SESSION['login_error']);
+} elseif (!empty($_GET['message'])) {
+    $toast_text = (string)$_GET['message'];
+    $toast_type = 'info';
+}
+
+/* ---- Handle Signup ---- */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // --- Validate signup ---
-    $fname = trim($_POST['fname'] ?? '');
-    $lname = trim($_POST['lname'] ?? '');
-    $email = trim($_POST['email'] ?? '');
+    // Detect if this POST is the signup form (not the login form)
+    // (login form posts to login.php, so we only get signup here)
+    $fname    = trim($_POST['fname'] ?? '');
+    $lname    = trim($_POST['lname'] ?? '');
+    $email    = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
     $confirm  = $_POST['confirm_password'] ?? '';
 
@@ -102,35 +116,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   .success-message { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 1rem; border-radius: var(--radius-md);
                      font-size: .95rem; display: flex; align-items: center; gap: .75rem; margin-bottom: 1.5rem; }
   .success-message svg { width: 1.25rem; height: 1.25rem; }
+
   /* login panel background */
   .login-section { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #fff; position: relative; overflow: hidden; }
   .login-section::before {
     content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%;
     background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.05) 10px, rgba(255,255,255,.05) 20px);
     animation: float 20s ease-in-out infinite;
-    z-index: 0;             /* so it stays behind */
-    pointer-events: none;   /* never block clicks */
+    z-index: 0; pointer-events: none;
   }
-  .login-section > * { position: relative; z-index: 1; } /* actual content above overlay */
+  .login-section > * { position: relative; z-index: 1; }
   @keyframes float { 0%,100%{ transform: translateY(0) rotate(0deg); } 50%{ transform: translateY(-10px) rotate(1deg); } }
   .login-section .auth-header h2, .login-section .auth-header p { color: #fff; }
   .login-section .form-input { background: #fff !important; border-color: rgba(255,255,255,.5) !important; color: var(--text-primary) !important; }
   .login-section .form-input:focus { background: #fff !important; border-color: rgba(255,255,255,.8) !important; box-shadow: 0 0 0 3px rgba(255,255,255,.2) !important; }
   .login-section .form-input::placeholder { color: var(--text-muted) !important; }
   .login-section .form-label { color: rgba(255,255,255,.9); }
+
   .btn { width: 100%; padding: .875rem 1.5rem; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: .95rem;
          cursor: pointer; transition: all .2s ease; display: inline-flex; align-items: center; justify-content: center; gap: .5rem; text-decoration: none; }
   .btn-primary { background: var(--primary-color); color: #fff; }
   .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: var(--shadow-lg); }
   .btn-white { background: #fff; color: var(--primary-color); border: 2px solid rgba(255,255,255,.3); }
   .btn-white:hover { background: rgba(255,255,255,.95); transform: translateY(-1px); }
+
   .divider { text-align: center; margin: 1.5rem 0; position: relative; color: var(--text-muted); font-size: .875rem; }
   .divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--border-light); }
   .divider span { background: #fff; padding: 0 1rem; }
   .login-section .divider span { background: var(--primary-color); color: rgba(255,255,255,.8); }
+
+  /* Toast notification */
+  .toast-wrap { position: fixed; top: 16px; right: 16px; z-index: 5000; }
+  .toast {
+    display: flex; align-items: center; gap: .5rem;
+    padding: .75rem 1rem; border-radius: 10px; box-shadow: var(--shadow-lg);
+    border: 1px solid; min-width: 280px;
+  }
+  .toast-error   { background: #fee2e2; border-color: #fecaca; color: #991b1b; }
+  .toast-success { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+  .toast-info    { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+  .toast button { margin-left: auto; background: transparent; border: 0; color: inherit; cursor: pointer; }
 </style>
 </head>
 <body>
+  <!-- Toast -->
+  <?php if ($toast_text !== ''): ?>
+    <div class="toast-wrap" role="status" aria-live="polite">
+      <div class="toast <?= $toast_type==='success'?'toast-success':($toast_type==='info'?'toast-info':'toast-error') ?>">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <?php if ($toast_type==='success'): ?>
+            <path d="M9 11l3 3l8-8"/><path d="M21 12a9 9 0 1 1-18 0a9 9 0 0 1 18 0"/>
+          <?php elseif ($toast_type==='info'): ?>
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="8"/>
+          <?php else: ?>
+            <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+          <?php endif; ?>
+        </svg>
+        <span><?= e($toast_text) ?></span>
+        <button type="button" onclick="this.closest('.toast-wrap').remove()" aria-label="Dismiss">✕</button>
+      </div>
+    </div>
+    <script>
+      // Auto-hide toast after 5s
+      setTimeout(()=>{ const t=document.querySelector('.toast-wrap'); t && t.remove(); }, 5000);
+    </script>
+  <?php endif; ?>
+
   <!-- Header -->
   <header class="header">
     <div class="container">
@@ -173,14 +224,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="password" name="password" id="login_password" class="form-input" placeholder="Enter your password" required>
               </div>
 
+              <!-- (We moved the visual error to the toast. Keep this block if you also want inline.) -->
               <?php
+              // If you want to KEEP inline too, uncomment the block below:
+              /*
               if (isset($_SESSION['login_error'])) {
                 echo '<div class="error-message"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>' . e($_SESSION['login_error']) . '</div>';
                 unset($_SESSION['login_error']);
               }
-              if (isset($_GET['message'])) {
-                echo '<div class="error-message"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>' . e($_GET['message']) . '</div>';
-              }
+              */
               ?>
 
               <button type="submit" class="btn btn-white">
@@ -240,8 +292,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </svg>
                 Create Account
               </button>
+
               <div class="divider"><span>Benefits of signing up</span></div>
-              <!-- your benefits grid ... -->
+              <!-- (your benefits grid here) -->
             </form>
           </div>
 

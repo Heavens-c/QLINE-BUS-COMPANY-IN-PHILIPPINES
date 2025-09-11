@@ -34,7 +34,7 @@
                         <li class="nav-divider"></li>
                         <li class="mobile-user-menu">
                             <?php
-                                session_start();
+                                
                                 if(isset($_SESSION['email'])){
                                     echo '<span class="user-welcome">Welcome, ' . htmlspecialchars($email) . '!</span>';
                                     echo '<a href="logout.php" class="nav-link nav-link-auth">Logout</a>';
