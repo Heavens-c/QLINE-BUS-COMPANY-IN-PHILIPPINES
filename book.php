@@ -1,3 +1,6 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) session_start();
+?>
 <!DOCTYPE html>
 <?php
     include 'php_includes/connection.php';
