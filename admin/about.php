@@ -138,58 +138,62 @@ while ($row = $r->fetch_assoc()) $values[] = $row;
   <form method="post" class="row g-4">
     <input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>">
 
-    <div class="col-lg-6">
-      <div class="card shadow-sm">
-        <div class="card-header"><strong>Header</strong></div>
-        <div class="card-body">
-          <label class="form-label">Page Title</label>
-          <input name="page_title" class="form-control mb-3" value="<?= e($page['page_title']) ?>" maxlength="191" required>
+<div class="col-lg-6">
+  <div class="card shadow-sm">
+    <div class="card-header"><strong>Header</strong></div>
+    <div class="card-body">
+      <label class="form-label">Page Title</label>
+      <input name="page_title" class="form-control mb-3" value="<?= e($page['page_title'] ?? '') ?>" maxlength="191" required>
 
-          <label class="form-label">Subtitle / Tagline</label>
-          <input name="subtitle" class="form-control" value="<?= e($page['subtitle']) ?>" maxlength="191">
+      <label class="form-label">Subtitle / Tagline</label>
+      <input name="subtitle" class="form-control" value="<?= e($page['subtitle'] ?? '') ?>" maxlength="191">
+    </div>
+  </div>
+
+  <!-- Mission & Vision -->
+  <div class="card shadow-sm mt-3">
+    <div class="card-header"><strong>Mission & Vision</strong></div>
+    <div class="card-body">
+      <label class="form-label">Mission</label>
+      <textarea name="mission" rows="4" class="form-control mb-3"><?= e($page['mission'] ?? '') ?></textarea>
+
+      <label class="form-label">Vision</label>
+      <textarea name="vision" rows="4" class="form-control"><?= e($page['vision'] ?? '') ?></textarea>
+    </div>
+  </div>
+</div>
+
+
+<div class="col-lg-6">
+  <div class="card shadow-sm">
+    <div class="card-header"><strong>History & Legacy</strong></div>
+    <div class="card-body">
+      <label class="form-label">History Title</label>
+      <input name="history_title" class="form-control mb-3" value="<?= e($page['history_title'] ?? '') ?>">
+
+      <label class="form-label">History Image URL</label>
+      <input name="history_img" class="form-control mb-3" value="<?= e($page['history_img'] ?? '') ?>" placeholder="images/about/history.jpg">
+
+      <label class="form-label">History Caption (under image)</label>
+      <textarea name="history_caption" rows="2" class="form-control mb-3"><?= e($page['history_caption'] ?? '') ?></textarea>
+
+      <label class="form-label">History Body (left column text if any)</label>
+      <textarea name="history_body" rows="3" class="form-control mb-3"><?= e($page['history_body'] ?? '') ?></textarea>
+
+      <div class="row">
+        <div class="col-6">
+          <label class="form-label">Legacy Title</label>
+          <input name="legacy_title" class="form-control" value="<?= e($page['legacy_title'] ?? '') ?>">
         </div>
-      </div>
-
-      <div class="card shadow-sm mt-3">
-        <div class="card-header"><strong>Mission & Vision</strong></div>
-        <div class="card-body">
-          <label class="form-label">Mission</label>
-          <textarea name="mission" rows="4" class="form-control mb-3"><?= e($page['mission']) ?></textarea>
-
-          <label class="form-label">Vision</label>
-          <textarea name="vision" rows="4" class="form-control"><?= e($page['vision']) ?></textarea>
+        <div class="col-12 mt-3">
+          <label class="form-label">Legacy Body</label>
+          <textarea name="legacy_body" rows="5" class="form-control"><?= e($page['legacy_body'] ?? '') ?></textarea>
         </div>
       </div>
     </div>
+  </div>
+</div>
 
-    <div class="col-lg-6">
-      <div class="card shadow-sm">
-        <div class="card-header"><strong>History & Legacy</strong></div>
-        <div class="card-body">
-          <label class="form-label">History Title</label>
-          <input name="history_title" class="form-control mb-3" value="<?= e($page['history_title']) ?>">
-
-          <label class="form-label">History Image URL</label>
-          <input name="history_img" class="form-control mb-3" value="<?= e($page['history_img']) ?>" placeholder="images/about/history.jpg">
-
-          <label class="form-label">History Caption (under image)</label>
-          <textarea name="history_caption" rows="2" class="form-control mb-3"><?= e($page['history_caption']) ?></textarea>
-
-          <label class="form-label">History Body (left column text if any)</label>
-          <textarea name="history_body" rows="3" class="form-control mb-3"><?= e($page['history_body']) ?></textarea>
-
-          <div class="row">
-            <div class="col-6">
-              <label class="form-label">Legacy Title</label>
-              <input name="legacy_title" class="form-control" value="<?= e($page['legacy_title']) ?>">
-            </div>
-            <div class="col-12 mt-3">
-              <label class="form-label">Legacy Body</label>
-              <textarea name="legacy_body" rows="5" class="form-control"><?= e($page['legacy_body']) ?></textarea>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div class="card shadow-sm mt-3">
         <div class="card-header d-flex justify-content-between">
