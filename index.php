@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,9 +37,9 @@
                         <li class="nav-divider"></li>
                         <li class="mobile-user-menu">
                             <?php
-                                
-                                if(isset($_SESSION['email'])){
-                                    echo '<span class="user-welcome">Welcome, ' . htmlspecialchars($email) . '!</span>';
+                                // Check if the user is logged in and display their email
+                                if (isset($_SESSION['email'])) {
+                                    echo '<span class="user-welcome">Welcome, ' . htmlspecialchars($_SESSION['email']) . '!</span>';
                                     echo '<a href="logout.php" class="nav-link nav-link-auth">Logout</a>';
                                 } else {
                                     echo '<a href="signlog.php" class="nav-link nav-link-auth nav-link-signup">Sign Up</a>';
@@ -44,17 +47,19 @@
                                 }
                             ?>
                         </li>
+
                     </ul>
                     
                     <div class="user-menu desktop-only">
                         <?php
-                            if(isset($_SESSION['email'])){
-                                echo '<span class="user-welcome">Welcome, ' . htmlspecialchars($email) . '!</span>';
-                                echo '<a href="logout.php" class="btn btn-secondary">Logout</a>';
-                            } else {
-                                echo '<a href="signlog.php" class="btn btn-primary">Sign Up / Login</a>';
-                            }
+                        if (isset($_SESSION['email'])) {
+                            echo '<span class="user-welcome">Welcome, ' . htmlspecialchars($_SESSION['email']) . '!</span>';
+                            echo '<a href="logout.php" class="btn btn-secondary">Logout</a>';
+                        } else {
+                            echo '<a href="signlog.php" class="btn btn-primary">Sign Up / Login</a>';
+                        }
                         ?>
+
                     </div>
                 </nav>
             </div>
