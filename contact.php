@@ -1,3 +1,37 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once __DIR__ . '/php_includes/connection.php';
+$hasAudit = file_exists(__DIR__ . '/php_includes/audit.php');
+if ($hasAudit) require_once __DIR__ . '/php_includes/audit.php';
+
+$feedback = '';
+$feedback_type = 'success'; // success | error
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $subject = trim($_POST['subject'] ?? '');
+    $message = trim($_POST['message'] ?? '');
+
+    if ($name === '' || $email === '' || $subject === '' || $message === '') {
+        $feedback = 'Please fill out all required fields.';
+        $feedback_type = 'error';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $feedback = 'Please enter a valid email address.';
+        $feedback_type = 'error';
+    } else {
+        if ($hasAudit) {
+            audit_log($con, $email, 'contact_message_sent', [
+                'name' => $name,
+                'subject' => $subject,
+                'message' => substr($message, 0, 150)
+            ]);
+        }
+        $feedback = 'Thank you! Your message has been sent successfully. We will get back to you shortly.';
+        $feedback_type = 'success';
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -114,7 +148,15 @@
                             <h2 class="card-title">Send Us a Message</h2>
                         </div>
                         <div class="card-body">
-                            <form class="validate" action="messageexec.php" method="POST">
+                            <?php if ($feedback !== ''): ?>
+                                <div style="padding: 1rem; margin-bottom: 1.5rem; border-radius: var(--radius-md); font-weight: 500; 
+                                            background-color: <?= $feedback_type === 'success' ? '#f0fdf4' : '#fef2f2' ?>; 
+                                            border: 1px solid <?= $feedback_type === 'success' ? '#bbf7d0' : '#fecaca' ?>; 
+                                            color: <?= $feedback_type === 'success' ? '#166534' : '#991b1b' ?>;">
+                                    <?= htmlspecialchars($feedback, ENT_QUOTES, 'UTF-8') ?>
+                                </div>
+                            <?php endif; ?>
+                            <form class="validate" action="contact.php" method="POST">
                                 <div class="form-group">
                                     <label for="name" class="form-label">Full Name *</label>
                                     <input id="name" class="form-input" type="text" name="name" required />

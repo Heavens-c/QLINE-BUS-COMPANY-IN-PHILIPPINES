@@ -37,20 +37,39 @@ VALUES
  'admin');
 
 -- -----------------------------------------------------------------------------
--- AUDIT TRAIL
+-- AUDIT LOG
 -- -----------------------------------------------------------------------------
-DROP TABLE IF EXISTS `audit_trail`;
-CREATE TABLE `audit_trail` (
-  `id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `actor`      VARCHAR(190) NOT NULL,         -- usually email or user id
-  `action`     VARCHAR(190) NOT NULL,         -- e.g., login_success
-  `ip_address` VARCHAR(45)  DEFAULT NULL,     -- IPv4/IPv6
+DROP TABLE IF EXISTS `audit_log`;
+CREATE TABLE `audit_log` (
+  `id`         INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `user_id`    VARCHAR(191) DEFAULT NULL,
+  `email`      VARCHAR(191) DEFAULT NULL,
+  `action`     VARCHAR(64)  NOT NULL,
+  `ip_address` VARCHAR(45)  DEFAULT NULL,
   `user_agent` TEXT         DEFAULT NULL,
-  `created_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `ix_actor` (`actor`),
+  `meta_json`  JSON         DEFAULT NULL,
+  `created_at` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY `ix_user_id` (`user_id`),
+  KEY `ix_email` (`email`),
   KEY `ix_action` (`action`),
   KEY `ix_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- -----------------------------------------------------------------------------
+-- OTP VERIFICATIONS
+-- -----------------------------------------------------------------------------
+DROP TABLE IF EXISTS `otp_verifications`;
+CREATE TABLE `otp_verifications` (
+  `id`             INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `contact_target` VARCHAR(191) NOT NULL,
+  `code`           VARCHAR(10) NOT NULL,
+  `token`          VARCHAR(64) NOT NULL,
+  `action`         VARCHAR(32) NOT NULL,
+  `verified`       TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `expires_at`     DATETIME NOT NULL,
+  `created_at`     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY `ix_contact_target` (`contact_target`),
+  KEY `ix_token` (`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- -----------------------------------------------------------------------------
@@ -77,21 +96,24 @@ VALUES
 );
 
 -- -----------------------------------------------------------------------------
--- REGS (kept close to your legacy structure; changed to utf8mb4)
+-- REGS (updated with travel date and payment gateway status)
 -- -----------------------------------------------------------------------------
 DROP TABLE IF EXISTS `regs`;
 CREATE TABLE `regs` (
-  `ticket`     INT(100) NOT NULL AUTO_INCREMENT,
-  `name`       VARCHAR(255) DEFAULT NULL,
-  `address`    VARCHAR(255) DEFAULT NULL,
-  `mobile`     VARCHAR(255) DEFAULT NULL,
-  `email`      VARCHAR(255) DEFAULT NULL,
-  `bustype`    VARCHAR(255) DEFAULT NULL,
-  `origin`     VARCHAR(255) DEFAULT NULL,
-  `destination`VARCHAR(255) DEFAULT NULL,
-  `price`      VARCHAR(255) DEFAULT NULL,
-  `seat_no`    VARCHAR(255) DEFAULT NULL,
-  `timetodep`  VARCHAR(255) DEFAULT NULL,
+  `ticket`         INT(100) NOT NULL AUTO_INCREMENT,
+  `name`           VARCHAR(255) DEFAULT NULL,
+  `address`        VARCHAR(255) DEFAULT NULL,
+  `mobile`         VARCHAR(255) DEFAULT NULL,
+  `email`          VARCHAR(255) DEFAULT NULL,
+  `bustype`        VARCHAR(255) DEFAULT NULL,
+  `origin`         VARCHAR(255) DEFAULT NULL,
+  `destination`    VARCHAR(255) DEFAULT NULL,
+  `price`          VARCHAR(255) DEFAULT NULL,
+  `seat_no`        VARCHAR(255) DEFAULT NULL,
+  `timetodep`      VARCHAR(255) DEFAULT NULL,
+  `travel_date`    DATE DEFAULT NULL,
+  `payment_status` VARCHAR(20) DEFAULT 'pending',
+  `payment_ref`    VARCHAR(50) DEFAULT NULL,
   PRIMARY KEY (`ticket`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

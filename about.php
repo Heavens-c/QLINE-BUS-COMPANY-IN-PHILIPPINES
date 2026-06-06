@@ -1,3 +1,7 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once __DIR__ . '/php_includes/connection.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,16 +32,12 @@
                     </ul>
                     
                     <div class="user-menu">
-                        <?php
-                            session_start();
-                            if(isset($_SESSION['email'])){
-                                $email = $_SESSION['email'];
-                                echo '<span class="user-welcome">Welcome, ' . htmlspecialchars($email) . '!</span>';
-                                echo '<a href="logout.php" class="btn btn-secondary">Logout</a>';
-                            } else {
-                                echo '<a href="signlog.php" class="btn btn-primary">Sign Up / Login</a>';
-                            }
-                        ?>
+                        <?php if (isset($_SESSION['email'])): ?>
+                            <span class="user-welcome">Welcome, <?= htmlspecialchars($_SESSION['email'], ENT_QUOTES, 'UTF-8') ?>!</span>
+                            <a href="logout.php" class="btn btn-secondary">Logout</a>
+                        <?php else: ?>
+                            <a href="signlog.php" class="btn btn-primary">Sign Up / Login</a>
+                        <?php endif; ?>
                     </div>
                 </nav>
             </div>
@@ -47,123 +47,12 @@
     <!-- Main Content -->
     <main class="main-content">
         <div class="container">
-            <!-- Page Header -->
-            <section class="content-grid">
-                <div class="text-center">
-                    <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;">About Us</h1>
-                    <p style="font-size: 1.125rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
-                        Serving the Philippines with reliable transportation since 1993
-                    </p>
-                </div>
-            </section>
-
-            <!-- History Section -->
-            <section class="content-grid">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Our History</h2>
-                    </div>
-                    <div class="card-body">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
-                            <div>
-                                <img src="images/oldbus.jpg" alt="Historical Bus Photo" style="width: 100%; border-radius: var(--radius-md);">
-                                <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary);">
-                                    Photo taken on October 16, 1993. Napat Transit (now Dimple Star Transport) NVR-963<br>
-                                    (fleet No 800) going to Alabang and jeepneys under the Light Rail Line in Taft Ave near<br>
-                                    United Nations Avenue, Ermita, Manila, Philippines.
-                                </p>
-                            </div>
-                            <div>
-                                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">A Legacy of Service</h3>
-                                <p style="line-height: 1.8; margin-bottom: 1rem;">
-                                    Founded in 1993 as Napat Transit, our company has been at the forefront of providing 
-                                    reliable transportation services to the Filipino people. Over three decades of experience 
-                                    have taught us the importance of safety, comfort, and punctuality.
-                                </p>
-                                <p style="line-height: 1.8; margin-bottom: 1rem;">
-                                    In May 2004, we underwent a significant transformation and rebranded to 
-                                    <strong>Dimple Star Transport</strong>, marking a new era of enhanced services 
-                                    and expanded routes.
-                                </p>
-                                <p style="line-height: 1.8;">
-                                    Today, we continue to serve as a trusted partner in transportation, connecting 
-                                    communities across Metro Manila and Mindoro Province with our modern fleet and 
-                                    experienced team.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Mission & Vision -->
-            <section class="content-grid">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
-                    <div class="card">
-                        <div class="card-header" style="background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white;">
-                            <h3 class="card-title" style="color: white;">Our Mission</h3>
-                        </div>
-                        <div class="card-body">
-                            <p style="font-size: 1.125rem; line-height: 1.7; color: var(--text-primary);">
-                                To provide superior transport service to Metro Manila and Mindoro Province commuters, 
-                                ensuring safe, comfortable, and reliable journeys for all our passengers.
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header" style="background: linear-gradient(135deg, var(--secondary-color), #d97706); color: white;">
-                            <h3 class="card-title" style="color: white;">Our Vision</h3>
-                        </div>
-                        <div class="card-body">
-                            <p style="font-size: 1.125rem; line-height: 1.7; color: var(--text-primary);">
-                                To lead the bus transport industry through innovative service delivery and commitment 
-                                to excellence, setting new standards for passenger transportation in the Philippines.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Values Section -->
-            <section class="content-grid">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Our Core Values</h2>
-                    </div>
-                    <div class="card-body">
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
-                            <div style="text-align: center;">
-                                <div style="width: 60px; height: 60px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 1.5rem; font-weight: bold;">S</div>
-                                <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">Safety First</h4>
-                                <p style="color: var(--text-secondary);">Your safety is our top priority in every journey.</p>
-                            </div>
-                            
-                            <div style="text-align: center;">
-                                <div style="width: 60px; height: 60px; background: var(--accent-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 1.5rem; font-weight: bold;">R</div>
-                                <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;">Reliability</h4>
-                                <p style="color: var(--text-secondary);">Consistent and dependable service you can count on.</p>
-                            </div>
-                            
-                            <div style="text-align: center;">
-                                <div style="width: 60px; height: 60px; background: var(--secondary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 1.5rem; font-weight: bold;">C</div>
-                                <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Comfort</h4>
-                                <p style="color: var(--text-secondary);">Modern amenities for a pleasant travel experience.</p>
-                            </div>
-                            
-                            <div style="text-align: center;">
-                                <div style="width: 60px; height: 60px; background: var(--text-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 1.5rem; font-weight: bold;">E</div>
-                                <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Excellence</h4>
-                                <p style="color: var(--text-secondary);">Striving for the highest standards in everything we do.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <!-- The About page is rendered dynamically from the database -->
+            <?php include __DIR__ . '/php_includes/get_about_page.php'; ?>
 
             <!-- Current Date/Time -->
-            <div class="text-right">
-                <p class="text-secondary"><?php include_once("php_includes/date_time.php"); ?></p>
+            <div class="text-right" style="margin-top:2rem;">
+                <p class="text-secondary"><?php include_once __DIR__ . "/php_includes/date_time.php"; ?></p>
             </div>
         </div>
     </main>

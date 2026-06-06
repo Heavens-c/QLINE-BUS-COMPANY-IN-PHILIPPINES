@@ -13,10 +13,10 @@ function e($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
 // Count
 if ($q !== '') {
     $like = '%' . $q . '%';
-    $stmt = $con->prepare("SELECT COUNT(*) c FROM audit_trail WHERE actor LIKE ? OR action LIKE ? OR ip_address LIKE ?");
-    $stmt->bind_param("sss", $like, $like, $like);
+    $stmt = $con->prepare("SELECT COUNT(*) c FROM audit_log WHERE email LIKE ? OR user_id LIKE ? OR action LIKE ? OR ip_address LIKE ?");
+    $stmt->bind_param("ssss", $like, $like, $like, $like);
 } else {
-    $stmt = $con->prepare("SELECT COUNT(*) c FROM audit_trail");
+    $stmt = $con->prepare("SELECT COUNT(*) c FROM audit_log");
 }
 $stmt->execute();
 $total = (int)($stmt->get_result()->fetch_assoc()['c'] ?? 0);
@@ -24,15 +24,15 @@ $stmt->close();
 
 // Rows
 if ($q !== '') {
-    $stmt = $con->prepare("SELECT id, actor, action, ip_address, user_agent, created_at
-                           FROM audit_trail
-                           WHERE actor LIKE ? OR action LIKE ? OR ip_address LIKE ?
+    $stmt = $con->prepare("SELECT id, COALESCE(email, user_id, 'unknown') AS actor, action, ip_address, user_agent, created_at
+                           FROM audit_log
+                           WHERE email LIKE ? OR user_id LIKE ? OR action LIKE ? OR ip_address LIKE ?
                            ORDER BY id DESC
                            LIMIT ?, ?");
-    $stmt->bind_param("sssii", $like, $like, $like, $off, $per);
+    $stmt->bind_param("ssssii", $like, $like, $like, $like, $off, $per);
 } else {
-    $stmt = $con->prepare("SELECT id, actor, action, ip_address, user_agent, created_at
-                           FROM audit_trail
+    $stmt = $con->prepare("SELECT id, COALESCE(email, user_id, 'unknown') AS actor, action, ip_address, user_agent, created_at
+                           FROM audit_log
                            ORDER BY id DESC
                            LIMIT ?, ?");
     $stmt->bind_param("ii", $off, $per);

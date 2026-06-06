@@ -8,7 +8,6 @@ $scriptDir = str_replace('\\','/', dirname($_SERVER['SCRIPT_NAME'] ?? '')); // e
 $adminBase = rtrim($scriptDir, '/');
 $rootBase  = rtrim(dirname($adminBase), '/');
 
-$slideUrl   = $adminBase . '/slide.php';
 $auditUrl   = $adminBase . '/audit_trail.php';
 $aboutUrl   = $adminBase . '/about.php';
 $publicUrl  = $rootBase  . '/index.php';
@@ -96,8 +95,7 @@ try {
   <div class="d-flex align-items-center justify-content-between mb-3">
     <h2 class="mb-0"><i class="bi bi-grid-1x2-fill"></i> Dashboard</h2>
     <div class="d-flex gap-2">
-      <a href="<?= e($slideUrl) ?>" class="btn btn-sm btn-primary"><i class="bi bi-sliders"></i> Slide Bar</a>
-      <a href="<?= e($auditUrl) ?>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-clipboard-data"></i> Audit Trail</a>
+      <a href="<?= e($auditUrl) ?>" class="btn btn-sm btn-primary"><i class="bi bi-clipboard-data"></i> Audit Trail</a>
       <a href="<?= e($aboutUrl) ?>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-info-circle"></i> Edit About</a>
       <a href="<?= e($publicUrl) ?>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-house-door"></i> View Site</a>
     </div>
@@ -242,18 +240,7 @@ try {
 
   <!-- Quick Actions -->
   <div class="row g-3 mt-1">
-    <div class="col-md-4">
-      <a class="card text-decoration-none shadow-sm h-100" href="<?= e($slideUrl) ?>">
-        <div class="card-body d-flex align-items-center gap-3">
-          <i class="bi bi-sliders fs-2"></i>
-          <div>
-            <div class="fw-semibold">Manage Slide Bar</div>
-            <small class="text-muted">Shortcuts & actions</small>
-          </div>
-        </div>
-      </a>
-    </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
       <a class="card text-decoration-none shadow-sm h-100" href="<?= e($auditUrl) ?>">
         <div class="card-body d-flex align-items-center gap-3">
           <i class="bi bi-clipboard-data fs-2"></i>
@@ -264,7 +251,7 @@ try {
         </div>
       </a>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
       <a class="card text-decoration-none shadow-sm h-100" href="<?= e($aboutUrl) ?>">
         <div class="card-body d-flex align-items-center gap-3">
           <i class="bi bi-info-circle fs-2"></i>

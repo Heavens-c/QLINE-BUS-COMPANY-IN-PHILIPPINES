@@ -10,7 +10,6 @@ $rootBase  = rtrim(dirname($adminBase), '/');
 
 /* URLs */
 $dashboardUrl = $adminBase . '/dashboard.php';
-$slideUrl     = $adminBase . '/slide.php';
 $aboutUrl     = $adminBase . '/about.php';
 $auditUrl     = $adminBase . '/audit_trail.php';
 $publicUrl    = $rootBase  . '/index.php';
@@ -63,7 +62,6 @@ function e($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
     </div>
     <nav class="mt-2">
       <a href="<?= e($dashboardUrl) ?>" class="nav-link <?= $current==='dashboard.php'?'active':''; ?>"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
-      <a href="<?= e($slideUrl) ?>"     class="nav-link <?= $current==='slide.php'?'active':''; ?>"><i class="bi bi-sliders"></i> Slide Bar</a>
       <a href="<?= e($aboutUrl) ?>"     class="nav-link <?= $current==='about.php'?'active':''; ?>"><i class="bi bi-info-circle"></i> About Page</a>
       <a href="<?= e($auditUrl) ?>"     class="nav-link <?= $current==='audit_trail.php'?'active':''; ?>"><i class="bi bi-clipboard-data"></i> Audit Trail</a>
       <a href="<?= e($publicUrl) ?>"    class="nav-link"><i class="bi bi-house-door"></i> Public Site</a>
@@ -79,7 +77,6 @@ function e($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
       </div>
       <div class="d-flex align-items-center gap-2">
         <a class="btn btn-sm btn-outline-secondary" href="<?= e($auditUrl) ?>"><i class="bi bi-clipboard-data"></i> Audit</a>
-        <a class="btn btn-sm btn-primary" href="<?= e($slideUrl) ?>"><i class="bi bi-sliders"></i> Slide Bar</a>
       </div>
     </div>
     <!-- Page content starts here -->

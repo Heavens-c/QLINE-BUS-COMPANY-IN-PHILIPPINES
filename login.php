@@ -66,16 +66,11 @@ $_SESSION['role']    = $user['role'] ?: 'user';
 
 if ($hasAudit) audit_log($con, $user['email'], 'login_success');
 
-// Redirect: admin vs normal user
-$adminRedirect = '/admin/dashboard.php';
-if (!file_exists(__DIR__ . $adminRedirect)) {
-    $adminRedirect = '/admin/dash.php';
-    if (!file_exists(__DIR__ . $adminRedirect)) $adminRedirect = '/admin/';
-}
-
+// Redirect: admin vs normal user (using relative redirects to prevent subdirectory issues)
+$adminRedirect = 'admin/dashboard.php';
 if (strtolower($_SESSION['role']) === 'admin') {
     header('Location: ' . $adminRedirect);
 } else {
-    header('Location: /index.php');
+    header('Location: index.php');
 }
 exit;
