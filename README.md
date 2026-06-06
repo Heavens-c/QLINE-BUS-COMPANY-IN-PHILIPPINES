@@ -1,6 +1,9 @@
-# QLine Bus Company - Modernized Bus Reservation System
+# QLine Bus Company - Web-Based Bus Reservation System
 
-This is the modernized, refactored, and secured web-based reservation system for **QLine Bus Company** (operating as **Dimple Star Transport** in the Philippines).
+## 🎓 School Mini Project
+*Developed as a student mini project at **Our Lady of Fatima University (OLFU) - Pampanga Campus** (completed prior to 2025).*
+
+This repository houses a refactored, modernized, and secured web-based bus reservation system for **QLine Bus Company** (operating as **Dimple Star Transport** in the Philippines).
 
 ---
 
